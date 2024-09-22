@@ -1,6 +1,30 @@
-@tailwind base;
+@tailwind base; 
 @tailwind components;
 @tailwind utilities;
+
+.content {
+  /* border: 1px solid black; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.card {
+  border: 1px solid #f0f0f0;
+  width: 300px;
+  height: 350px;
+  text-align: center;
+  margin: 5px 5px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px grey;
+  padding: 50px 10px;
+}
+
+.card:hover {
+  box-shadow: 2px 2px 5px grey;
+}
 
 :root {
   --background: #ffffff;
@@ -15,9 +39,12 @@
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  /*font-family: Arial, Helvetica, sans-serif;*/
 }
 
 @layer utilities {
@@ -25,3 +52,18 @@ body {
     text-wrap: balance;
   }
 }
+
+@font-face {
+  font-family: "NotoSerifKR";
+  src: url('./fonts/NotoSerifKR-VariableFont_wght.ttf');
+  font-style: "normal";
+  /*unicode-range: U+AC00-D7A3;*/
+}
+
+@font-face {
+  font-family: "Lora";
+  src: url("./fonts/Lora-VariableFont_wght.ttf") format("truetype");
+  font-style: "normal"; 
+  /*unicode-range: U+0041-005A, U+0061-007A;*/
+}
+

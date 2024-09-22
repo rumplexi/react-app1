@@ -1,0 +1,14 @@
+
+.postSection {
+    display: flex;
+    max-width: 768px;
+    padding: 32px 16px 48px 16px;
+    flex-direction: column;
+    align-items: start;
+    gap: 24px;
+}
+
+.post {
+    font-weight: 400;
+    font-family: "Lora", "NotoSerifKR";
+}
