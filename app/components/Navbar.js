@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { AcademicCapIcon } from '@heroicons/react/24/solid'
+import { AcademicCapIcon } from '@heroicons/react/16/solid'
 import styles from './Navbar.module.css'
 import Link from 'next/link'
 

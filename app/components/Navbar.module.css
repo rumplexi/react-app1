@@ -20,4 +20,10 @@
     color: grey;
     border-bottom: 1px solid grey;
   }
+
+  .icon {
+    width: 24px;
+    height: 24px;
+    margin: 0 3px;
+  }
   
