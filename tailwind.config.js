@@ -13,7 +13,7 @@ module.exports = {
         foreground: "var(--foreground)",
       },
       fontFamily: {
-        serif: ['var(--font-notokr)'],
+        serif: ["var(--font-lora)", "var(--font-notoserif)"],
       }
     },
   },

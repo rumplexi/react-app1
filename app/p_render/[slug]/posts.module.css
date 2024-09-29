@@ -1,0 +1,32 @@
+
+@font-face {
+    font-family: "Lora";
+    src: local("../fonts/Lora-VariableFont_wght.ttf");
+}
+
+@font-face {
+    font-family: "Noto-serif-KR";
+    src: local("../fonts/NotoSerifKR-VariableFont_wght.ttf");
+}
+
+.article {
+    width: 768px;
+    padding: 25px; 
+}
+
+.article h2 {
+    font-weight: bolder;
+    color: blue;
+    margin: 20px auto 10px auto;
+}
+
+.article p {
+    /* font-family: "Lora", "Noto-serif-KR"; */
+    font-family: var(--font-lora), var(--font-notoserif);
+    line-height: 180%;
+}
+
+.article pre {
+    padding: 1rem 1rem;
+    overflow-wrap: break-word;
+}

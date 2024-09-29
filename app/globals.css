@@ -1,4 +1,4 @@
-@tailwind base; 
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -14,6 +14,7 @@
 .post {
   font-weight: 400;
 }
+
 .content {
   /* border: 1px solid black; */
   max-width: 768px;
