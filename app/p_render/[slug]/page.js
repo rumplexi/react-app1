@@ -8,13 +8,12 @@ import remarkFrontmatter from 'remark-frontmatter';
 import remarkRehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
 import rehypePrettyCode from 'rehype-pretty-code';
-import { noto_serif_kr, lusitana } from '@/app/fonts';
 
-export default async function Page({params}){
+export default async function Page({params}){ //dynamic routing using /p_render/[slug] pass slug to params.slug to this function
 
     const fileName = params.slug + ".mdx";
     const pathName = path.join(process.cwd(), 'app', '.posts', fileName)
-    const doc = await fs.readFileSync(pathName) // await을 하지 않으면 String(file) 안됨
+    const doc = await fs.readFileSync(pathName) // await FileSync를 하지 않으면 String(file) 안됨 NOT SURE WHY IS THIS!!!
 
     const file = await unified()
         .use(remarkParse)
@@ -24,9 +23,9 @@ export default async function Page({params}){
             theme: "one-light",
         })
         .use(rehypeStringify)
-        .process(doc)
-              
-    return(
+        .process(doc) 
+    
+        return(
         <div className={styles.article} dangerouslySetInnerHTML={{__html:String(file)}}/>
     )
 }
