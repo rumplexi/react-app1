@@ -1,0 +1,40 @@
+.container{
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  width: 768px;
+}
+
+.container.navContainer {
+  justify-content: end;
+  border-bottom: 1px solid #ededed;
+  height: 84px;
+}
+
+.container.footContainer {
+  margin-top: 16px;
+  padding-top: 16px;
+  justify-content: start;
+  border-top: 1px solid #ededed;
+
+}
+.footContainer > h4 {
+  color: gray;
+  margin: 0 8px;
+}
+
+.menu {
+  color: #303030;
+  margin: 0px 15px;
+}
+
+.menu:hover {
+  color: grey;
+  border-bottom: 1px solid grey;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  margin: 0 4px;
+}

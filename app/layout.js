@@ -1,5 +1,5 @@
 import { lora, noto_serif_kr} from "./fonts";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 import "./globals.css";
 

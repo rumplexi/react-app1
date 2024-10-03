@@ -1,7 +1,6 @@
-'use client'
 import React from 'react'
 import { AcademicCapIcon } from '@heroicons/react/16/solid'
-import styles from './Navbar.module.css'
+import styles from './compo.module.css'
 import Link from 'next/link'
 
 const navItems = {
@@ -21,8 +20,8 @@ const navMenues = Object.entries(navItems).map(([title, path]) => {
 
 export default function Navbar() {
     return (
-        <div className={styles.container}>
-            <AcademicCapIcon className="size-6 mx-3" />
+        <div className={`${styles.container} ${styles.navContainer}`}>
+            <AcademicCapIcon className={styles.icon} />
             {navMenues}
         </div>
     )
