@@ -1,5 +1,5 @@
 'use client'
-
+  
 import React from 'react'
 import { useEffect, useState } from "react";
 import "@uiw/react-md-editor/markdown-editor.css";
@@ -7,7 +7,7 @@ import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
 
 import { doc, addDoc } from "firebase/firestore"; 
-import { notes, db } from "../firebase"; 
+import { notes, db } from "../configure-fb"; 
 import matter from 'gray-matter';
 
 const MDEditor = dynamic(
