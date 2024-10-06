@@ -6,14 +6,6 @@ import { getFirestore, collection } from "firebase/firestore"
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyBbVixoke3S2E39SupcT8JnAVgzjcXboME",
-  authDomain: "react-notes-e0486.firebaseapp.com",
-  projectId: "react-notes-e0486",
-  storageBucket: "react-notes-e0486.appspot.com",
-  messagingSenderId: "486796554451",
-  appId: "1:486796554451:web:5219774a4d5e7fbda16426"
-};
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
