@@ -27,6 +27,6 @@
 }
 
 .article pre {
-    padding: 1rem 1rem;
-    overflow-wrap: break-word;
+    padding: 1rem 0;
+    text-wrap: wrap;
 }

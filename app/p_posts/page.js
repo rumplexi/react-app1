@@ -6,7 +6,7 @@ import path from 'path'
 import matter from 'gray-matter';
 import {lora} from '../fonts'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/16/solid'
-import { CalendarDateRangeIcon, PencilSquareIcon } from '@heroicons/react/24/outline'
+import { CalendarDateRangeIcon } from '@heroicons/react/24/outline'
 
 export default function Page({searchParams}){
 
@@ -38,9 +38,6 @@ export default function Page({searchParams}){
                     <Link href={{
                         pathname: "/p_render/" + `${item.slug}`
                     }}><h1 className="text-lg text-blue-500 font-bold">{item.title}</h1></Link>
-                    <Link href={{
-                        pathname: "/p_tags/"
-                    }}><PencilSquareIcon className="size-4 mx-2 stroke-gray-500"/></Link>
                 </div>
                 <p className="my-1">{item.author}</p>
                 <div className="flex justify-start items-center my-1">
