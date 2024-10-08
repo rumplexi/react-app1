@@ -5,7 +5,7 @@ export default function postPage(props) {
     const post = getPosts();
 
     return (
-        redirect('/p_posts?pageNumber=1')
+        redirect('/p_posts')
     )
 
 }
