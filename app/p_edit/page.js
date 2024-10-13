@@ -5,9 +5,8 @@ import { useEffect, useState } from "react";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
-
-import { doc, addDoc } from "firebase/firestore"; 
-import { notes, db } from "../configure-fb"; 
+import { addDoc } from "firebase/firestore"; 
+import { notesCollection } from "../configure-fb"; 
 import matter from 'gray-matter';
 
 const MDEditor = dynamic(
@@ -26,7 +25,7 @@ export default function Edit() {
   async function submit() {
     const date = new Date()
     const mdDoc = matter(contents)
-    await addDoc(notes, {
+    await addDoc(notesCollection, {
       front: mdDoc.data,
       content: mdDoc.content,
       date : date.toDateString()

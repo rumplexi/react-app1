@@ -1,19 +1,20 @@
 // listing posts and rendering
 
 import Post from '../components/post'
-import { notesCollection } from '../configure-fb'; 
-import { getDocs } from 'firebase/firestore';
+import { querySnapshot } from '../configure-fb'
 
 export default async function Page(){
 
-    // move this code to utils.js and use React cache module  
-    const querySnapshot = await getDocs(notesCollection)
-    let frontMatter = []
-    querySnapshot.forEach((doc) => {
-        frontMatter.push(doc.data().front)
+    // ad firebase document id
+    const noteObjects = querySnapshot.docs.map((doc) => {
+        return {
+            id: doc.id,
+            ...doc.data(),
+        }
     })
-    
+
+    // send database snapshot as prop to client component
     return (
-        <Post frontMatter={frontMatter}/>
+        <Post notes={noteObjects}/>
     )
 }
