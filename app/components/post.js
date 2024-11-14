@@ -1,87 +1,105 @@
-/* listing posts */
+/* listing or rendering posts */
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { lora } from '../fonts'
+import { lora, noto_serif_kr } from '../fonts'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/16/solid'
-import { CalendarDateRangeIcon, PencilSquareIcon, ArrowUturnLeftIcon } from '@heroicons/react/24/outline'
+import { CalendarDateRangeIcon, PencilSquareIcon, ArrowUturnLeftIcon, TrashIcon } from '@heroicons/react/24/outline'
 import styles from './posts.module.css'
 import { md } from '../utils'
+import { db, notesCollection } from '../configure-fb'
+import { onSnapshot, doc, deleteDoc, setDoc } from 'firebase/firestore'
 
-export default function Post(props){
+export default function Post(){
 
-    const [note, setNote] = useState('')
+    const [notesArray, setNotesArray] = useState([])
+    const [note, setNote] = useState('') // noteToRender...
     const [pageNum, setPageNum] = useState(1)
 
-    const nPosts = props.notes.length
+    useEffect(()=>{
+        const unsubscribe = onSnapshot(notesCollection, function(snapshot) {
+            const notesArr = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                id: doc.id
+            })) 
+            setNotesArray(notesArr)
+        })
+        return unsubscribe
+    }, [])
+
+    const nPosts = notesArray.length
     const postsPerPage = 3;
     const maxPageNumber = Math.ceil(nPosts/postsPerPage)
 
+    async function onDelete(id) {
+        /* delete a note from firebase */
+        const docRef = doc(db, "notes", id)
+        await deleteDoc(docRef)
+        onList()        
+    }
     function onRender(id) {
-        const noteToRender = props.notes.find((elem) => elem.id === id)
+        const noteToRender = notesArray.find((elem) => elem.id === id)
         setNote(noteToRender)
     }
-
     function onList() {
         setNote('')
         setPageNum(1)
+        console.log(notesArray[0])
     }
-
     const startIndex = (pageNum-1) * postsPerPage
     const endIndex = Math.min(startIndex + postsPerPage, nPosts)
-    const posts = props.notes.slice(startIndex, endIndex).map((note) => {
+    const posts = notesArray.slice(startIndex, endIndex).map((note) => {
         return (
-            <div key={note.id}>
-                <h1 onClick={() => onRender(note.id)} className="cursor-pointer text-lg text-blue-500 font-bold">{note.front.title}</h1>
-                <p className="my-1">{note.front.author}</p>
-                <div className="flex justify-start items-center my-1">
-                    <CalendarDateRangeIcon className="size-5 mr-1"/>
+            <div key={note.id} className={styles.postInfo}>
+                <h1 onClick={() => onRender(note.id)}>{note.front.title}</h1>
+                <p>{note.front.author}</p>
+                <div className={styles.dateDiv}>
+                    <CalendarDateRangeIcon className={styles.icon} />
                     <p>{note.front.date}</p>
                 </div>
                 <p className={lora.className}>{note.front.excerpt}</p>
             </div>
         );
     })
-
     return (
-        <> {note === "" &&
+        <> {note === '' &&  /* if note to render is empty, that is pageListView*/
             <>
-                <div className="postSection">
+                <div className={styles.postList}>
                     {posts}
                 </div>
-                <div className="flex justify-between items-center">
+                <div className={styles.pagenation}>
                     {pageNum > 1 ?
-                        <ChevronLeftIcon onClick={() => setPageNum(pageNum - 1)} className="size-6 cursor-pointer" /> :
-                        <ChevronLeftIcon className="size-6 stroke-gray-200" />}
+                        <ChevronLeftIcon onClick={() => setPageNum(pageNum - 1)} className={styles.icon} /> :
+                        <ChevronLeftIcon className={styles.iconDisabled} />}
                     <p>Page : {pageNum} / {maxPageNumber}</p>
                     {pageNum < maxPageNumber ?
-                        <ChevronRightIcon onClick={() => setPageNum(pageNum + 1)} className="size-6 cursor-pointer" /> :
-                        <ChevronRightIcon className="size-6 stroke-gray-200" />}
+                        <ChevronRightIcon onClick={() => setPageNum(pageNum + 1)} className={styles.icon} /> :
+                        <ChevronRightIcon className={styles.iconDisabled} />}
                 </div>
             </>}
-            {note !== '' &&
+            {note !== '' && /* note to render is not empty */
                 <>
-                    <div className="flex flex-col justify-start items-start p-4 mt-2 w-[768px]">
-                        <div className='flex justify-between items-end mb-4 w-full'>
-                            <h1 className="text-2xl text-amber-700 font-bold">{note.front.title}</h1>
-                            <div className='flex justify-end items-center'>
-                                <Link href="/p_edit"><PencilSquareIcon className="size-6 pb-1" /></Link>
-                                <ArrowUturnLeftIcon onClick={onList} className='size-6 ml-2 pb-1 cursor-pointer'/>
+                    <div className={styles.postHeader}>
+                        <div className={styles.postTitle}>
+                            <h1>{note.front.title}</h1>
+                            <div className={styles.postHeaderNav}>
+                                <Link href= {{pathname: '/p_edit', query: { id: note.id}}}>
+                                        <PencilSquareIcon className={styles.icon} /></Link>
+                                <TrashIcon onClick={() => onDelete(note.id)} className={styles.icon}/>
+                                <ArrowUturnLeftIcon onClick={onList} className={styles.icon} />
                             </div>
                         </div>
-                        <div className="flex justify-start items-center my-1">
-                            <CalendarDateRangeIcon className="size-6 mr-1" />
-                            <p className='mr-3'>{note.front.date}</p>
-
+                        <div className={styles.dateDiv}>
+                            <CalendarDateRangeIcon className={styles.icon} />
+                            <p>{note.front.date}</p>
                         </div>
                     </div>
-                    <div className={styles.article} dangerouslySetInnerHTML={{ __html: md.render(note.content)}} />
-                    <div className='flex justify-end items-end mt-4 w-[768px]'>
-                        <Link href="/p_edit"><PencilSquareIcon className="size-6 pb-1" /></Link>
-                        <ArrowUturnLeftIcon onClick={onList} className='size-6 ml-2 pb-1 cursor-pointer'/>
+                    <div className={`${styles.postBody} ${lora.className} ${noto_serif_kr.className}`} dangerouslySetInnerHTML={{ __html: md.render(note.content) }} />
+                    <div className={styles.postHeaderNav}>
+                        <PencilSquareIcon className={styles.icon} />
+                        <ArrowUturnLeftIcon onClick={onList} className={styles.icon} />
                     </div>
-
                 </>
             }
         </>

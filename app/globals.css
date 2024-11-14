@@ -2,32 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.postSection {
-  display: flex;
-  max-width: 768px;
-  height: 567px;
-  padding: 32px 16px 48px 16px;
-  flex-direction: column;
-  align-items: start;
-  gap: 24px;
-}
-
-.post {
-  font-weight: 400;
-}
-
-.content {
-  /* border: 1px solid black; */
-  max-width: 768px;
-  padding: 32px 16px 48px 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  margin-top: 50px;
-  background-color: azure;
-}
-
 .card {
   border: 1px solid #f0f0f0;
   width: 300px;
