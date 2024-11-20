@@ -1,4 +1,3 @@
-import { lora, noto_serif_kr} from "./fonts";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 import "./globals.css";
@@ -10,8 +9,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${noto_serif_kr.variable} ${lora.variable}`}>
-      <body className="flex flex-column justify-start item-center">
+    <html lang="en">
+      <body className="flex flex-column justify-start item-center bg-[#f5f5f5]">
         <Navbar />
         {children}
         <Footer />

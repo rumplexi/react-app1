@@ -1,6 +1,25 @@
 import { useEffect, useRef } from 'react';
 import p5 from 'p5';
 
+export default function App() {
+    // create a reference to the container in which the p5 instance should place the canvas
+    const p5ContainerRef = useRef();
+
+    useEffect(() => {
+        // On component creation, instantiate a p5 object with the sketch and container reference 
+        const p5Instance = new p5(sketch, p5ContainerRef.current);
+
+        // On component destruction, delete the p5 instance
+        return () => {
+            p5Instance.remove();
+        }
+    }, []);
+
+    return (
+        <div ref={p5ContainerRef} />
+    );
+}
+
 function sketch(p) {
     // p is a reference to the p5 instance this sketch is attached to
     var noNodes = 50;
@@ -8,7 +27,7 @@ function sketch(p) {
     var gravityConstant = 1.1;
     var forceConstant = 800;
     var physics = true;
-    
+
     var nodes = [];
     var nodeCon = [];
     var clicked = false;
@@ -17,9 +36,9 @@ function sketch(p) {
     var closeNode;
     var closeNodeMag;
 
-    p.setup = function() {
-        
-        p.createCanvas(800 , 800);
+    p.setup = function () {
+
+        p.createCanvas(400, 400);
         p.fill(0)
         for (let i = 0; i < noNodes; i++) {
             let x = p.random(-startDisMultiplier * p.width, startDisMultiplier * p.width)
@@ -56,7 +75,7 @@ function sketch(p) {
         }
     }
 
-    p.draw = function() {
+    p.draw = function () {
         // your draw code here
         p.translate(p.width / 2, p.height / 2)
         p.background(255);
@@ -82,90 +101,69 @@ function sketch(p) {
             }
         }
     }
-    
+
     p.touchStarted = function touchStarted() {
         clicked = true
-        let mousePos = p.createVector(p.mouseX-p.width/2, p.mouseY-p.height/2)
-        nodes.forEach((node)=>{
-          if (mousePos.copy().sub(node.pos).mag() - closeNode.mass/(2 * p.PI) < mousePos.copy().sub(closeNode.pos).mag() - closeNode.mass/(2 * p.PI))
-            closeNode = node;
+        let mousePos = p.createVector(p.mouseX - p.width / 2, p.mouseY - p.height / 2)
+        nodes.forEach((node) => {
+            if (mousePos.copy().sub(node.pos).mag() - closeNode.mass / (2 * p.PI) < mousePos.copy().sub(closeNode.pos).mag() - closeNode.mass / (2 * p.PI))
+                closeNode = node;
         })
     }
-    
+
     p.touchEnded = function touchEnded() {
         clicked = false
         lerpValue = 0.15
     }
-    
+
     function applyForces(nodes) {
-    
-      // apply force towards centre
-      nodes.forEach(node => {
-        const gravity = node.pos.copy().mult(-1).mult(gravityConstant)
-        node.force = gravity
-      })
-    
-      // apply repulsive force between nodes
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const pos = nodes[i].pos
-          const dir = nodes[j].pos.copy().sub(pos)
-          const force = dir.div(dir.mag() * dir.mag())
-          force.mult(forceConstant)
-          nodes[i].force.add(force.copy().mult(-1))
-          nodes[j].force.add(force)
+
+        // apply force towards centre
+        nodes.forEach(node => {
+            const gravity = node.pos.copy().mult(-1).mult(gravityConstant)
+            node.force = gravity
+        })
+
+        // apply repulsive force between nodes
+        for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+                const pos = nodes[i].pos
+                const dir = nodes[j].pos.copy().sub(pos)
+                const force = dir.div(dir.mag() * dir.mag())
+                force.mult(forceConstant)
+                nodes[i].force.add(force.copy().mult(-1))
+                nodes[j].force.add(force)
+            }
         }
-      }
-    
-      // apply forces applied by connections
-      nodeCon.forEach(con => {
-        let node1 = nodes[con[0]]
-        let node2 = nodes[con[1]]
-        let maxDis = con[2]
-        let dis = node1.pos.copy().sub(node2.pos)
-        const diff = dis.mag() - maxDis
-        node1.force.sub(dis)
-        node2.force.add(dis)
-      })
+
+        // apply forces applied by connections
+        nodeCon.forEach(con => {
+            let node1 = nodes[con[0]]
+            let node2 = nodes[con[1]]
+            let maxDis = con[2]
+            let dis = node1.pos.copy().sub(node2.pos)
+            const diff = dis.mag() - maxDis
+            node1.force.sub(dis)
+            node2.force.add(dis)
+        })
     }
-    
+
     function Node(pos, size) {
-      this.pos = pos
-      this.force = p.createVector(0, 0)
-      this.mass = (2 * p.PI * size)/1.5
-      this.fs = []
+        this.pos = pos
+        this.force = p.createVector(0, 0)
+        this.mass = (2 * p.PI * size) / 1.5
+        this.fs = []
     }
-    
-    Node.prototype.update = function() {
-      const force = this.force.copy()
-      const vel = force.copy().div(this.mass)
-      // print("VEL", vel, "FORCE", force)
-      this.pos.add(vel)
+
+    Node.prototype.update = function () {
+        const force = this.force.copy()
+        const vel = force.copy().div(this.mass)
+        // print("VEL", vel, "FORCE", force)
+        this.pos.add(vel)
     }
-    
-    Node.prototype.draw = function() {
-      p.ellipse(this.pos.x, this.pos.y, this.mass, this.mass)
+
+    Node.prototype.draw = function () {
+        p.ellipse(this.pos.x, this.pos.y, this.mass, this.mass)
     }
 
 }
-
-function App() {
-    // create a reference to the container in which the p5 instance should place the canvas
-    const p5ContainerRef = useRef();
-
-    useEffect(() => {
-        // On component creation, instantiate a p5 object with the sketch and container reference 
-        const p5Instance = new p5(sketch, p5ContainerRef.current);
-
-        // On component destruction, delete the p5 instance
-        return () => {
-            p5Instance.remove();
-        }
-    }, []);
-
-    return (
-        <div ref={p5ContainerRef} />
-    );
-}
-
-export default App;

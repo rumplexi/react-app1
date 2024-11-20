@@ -3,12 +3,13 @@
 
 import React from 'react'
 import { useEffect, useState } from "react";
+import { useRouter } from 'next/navigation';
 //import "@uiw/react-md-editor/markdown-editor.css";
 //import "@uiw/react-markdown-preview/markdown.css";
+//import matter from 'gray-matter';
 import dynamic from "next/dynamic";
-import { addDoc, onSnapshot, doc, setDoc, getDoc } from "firebase/firestore";
+import { addDoc, onSnapshot, doc, setDoc } from "firebase/firestore";
 import { db, notesCollection } from "../configure-fb";
-import matter from 'gray-matter';
 import { useSearchParams } from 'next/navigation';
 
 const MDEditor = dynamic(
@@ -17,6 +18,7 @@ const MDEditor = dynamic(
 );
 
 export default function Edit() {
+  const router = useRouter()
   const searchParams = useSearchParams();
   const docID = searchParams.get('id')
   const [title, setTitle] = useState('')
@@ -39,7 +41,7 @@ export default function Edit() {
   }, []);
 
   async function uploadNote() {
-    if (docID === null) {
+    if (docID === null) { // creating a new note(doc) in the firebase
       const newNote = {
         front: {
           title: title,
@@ -48,21 +50,21 @@ export default function Edit() {
         },
         content: content
       }
-
       try {
         const docRef = await addDoc(notesCollection, newNote);
         alert("New Note added with ID: " + docRef.id)
+        router.push('/')
       } catch (e) {
         console.error("Error adding document: ", e);
         alert("Failed to add document: " + e)
       }
 
-    } else {
+    } else { // update the current note being edited
       try {
         const docRef = doc(db, "notes", docID)
         await setDoc(docRef, { front: { title: title }, content: content }, { merge: true })
         alert("Document updated with ID: " + docRef.id)
-
+        router.push('/p_view?id='+docRef.id)
       } catch (e) {
         console.error("Error adding document: ", e);
         alert("Failed to add document: " + e)
@@ -80,15 +82,15 @@ export default function Edit() {
   }
 
   return (
-    <div className="container">
-      <input className="bg-slate-100 mt-2" onChange={onTitleChanged} placeholder="edit title" type='text' value={title} size='50' />
+    <div class="container">
+      <input class="bg-slate-100 mt-2" onChange={onTitleChanged} placeholder="edit title" type='text' value={title} size='50' />
       <p>{date}</p>
       <MDEditor className='mt-2'
         value={content}
         onChange={onUpdate}
         height={600}
       />
-      <button className="bg-indigo-700 text-white p-2 rounded-full" onClick={uploadNote}>Upload Note!!</button>
+      <button class="bg-indigo-700 text-white p-2 rounded-full" onClick={uploadNote}>Upload Note!!</button>
     </div>
   );
 }
